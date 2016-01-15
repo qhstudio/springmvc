@@ -12,7 +12,6 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "user_info")
 public class User {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long userId;
@@ -26,7 +25,7 @@ public class User {
 		this.userId = userId;
 	}
 
-	@NotBlank(message="用户名不能为空")//进行参数验证
+	@NotBlank(message="{error.user.name.null}")//进行参数验证
 	@Size(min=1,max=30,message="{error.user.name.length}")
 	public String getUserName() {
 		return userName;
