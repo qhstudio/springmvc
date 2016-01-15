@@ -20,4 +20,11 @@ public interface UserService {
 	 */
 	User add(User u);
 
+	/**
+	 * 根据id查找一个用户
+	 * @param id
+	 * @return
+	 */
+	User getUser(Long id);
+
 }

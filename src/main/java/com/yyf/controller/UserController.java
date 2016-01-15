@@ -9,9 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.yyf.base.Response;
 import com.yyf.model.User;
 import com.yyf.service.UserService;
 
@@ -22,12 +25,21 @@ public class UserController {
 	private UserService userService;
 
 	@RequestMapping("/get-users")
-	public @ResponseBody List<User> getUsers(Integer pageNo) throws Exception {
-		if (pageNo == null) {
-			pageNo = 1;
-		}
+	public @ResponseBody List<User> getUsers() throws Exception {
 		List<User> users = userService.getUsers();
 		return users;
+	}
+
+	@RequestMapping("/get-user/{id}")
+	public @ResponseBody Response getUser(@PathVariable("id") Long id) throws Exception {
+		Response resp = new Response();
+		User user = userService.getUser(id);
+		if (user == null) {
+			resp.failure("用户不存在");
+		} else {
+			resp.success(user);
+		}
+		return resp;
 	}
 
 	@RequestMapping("/user-list")
@@ -48,7 +60,7 @@ public class UserController {
 	public String userAddSubmit(Model model, @Valid User user, BindingResult result) throws Exception {
 		if (result.hasErrors()) {
 			List<ObjectError> allErrors = result.getAllErrors();
-			model.addAttribute("allErrors",allErrors);
+			model.addAttribute("allErrors", allErrors);
 			return "user/user-add.jsp";
 		}
 		userService.add(user);
